@@ -788,22 +788,25 @@ public abstract class DfuBaseService extends IntentService implements DfuProgres
 
 			logi("User action received: " + action);
 			switch (action) {
-				case ACTION_PAUSE -> {
-					sendLogBroadcast(LOG_LEVEL_WARNING, "[Broadcast] Pause action received");
-					if (mDfuServiceImpl != null)
-						mDfuServiceImpl.pause();
-				}
-				case ACTION_RESUME -> {
-					sendLogBroadcast(LOG_LEVEL_WARNING, "[Broadcast] Resume action received");
-					if (mDfuServiceImpl != null)
-						mDfuServiceImpl.resume();
-				}
-				case ACTION_ABORT -> {
-					sendLogBroadcast(LOG_LEVEL_WARNING, "[Broadcast] Abort action received");
-					mAborted = true;
-					if (mDfuServiceImpl != null)
-						mDfuServiceImpl.abort();
-				}
+				case ACTION_PAUSE: {
+						sendLogBroadcast(LOG_LEVEL_WARNING, "[Broadcast] Pause action received");
+						if (mDfuServiceImpl != null)
+							mDfuServiceImpl.pause();
+					}
+					break;
+				case ACTION_RESUME: {
+						sendLogBroadcast(LOG_LEVEL_WARNING, "[Broadcast] Resume action received");
+						if (mDfuServiceImpl != null)
+							mDfuServiceImpl.resume();
+					}
+					break;
+				case ACTION_ABORT: {
+						sendLogBroadcast(LOG_LEVEL_WARNING, "[Broadcast] Abort action received");
+						mAborted = true;
+						if (mDfuServiceImpl != null)
+							mDfuServiceImpl.abort();
+					}
+					break;
 			}
 		}
 	};
@@ -1722,45 +1725,52 @@ public abstract class DfuBaseService extends IntentService implements DfuProgres
 		builder.setColor(Color.GRAY);
 
 		switch (progress) {
-			case PROGRESS_CONNECTING ->
+			case PROGRESS_CONNECTING:
 					builder.setOngoing(true)
 							.setContentTitle(getString(R.string.dfu_status_connecting))
 							.setContentText(getString(R.string.dfu_status_connecting_msg, deviceName))
 							.setProgress(100, 0, true);
-			case PROGRESS_STARTING ->
+					break;
+			case PROGRESS_STARTING:
 					builder.setOngoing(true)
 							.setContentTitle(getString(R.string.dfu_status_starting))
 							.setContentText(getString(R.string.dfu_status_starting_msg))
 							.setProgress(100, 0, true);
-			case PROGRESS_ENABLING_DFU_MODE ->
+				break;
+			case PROGRESS_ENABLING_DFU_MODE:
 					builder.setOngoing(true)
 							.setContentTitle(getString(R.string.dfu_status_switching_to_dfu))
 							.setContentText(getString(R.string.dfu_status_switching_to_dfu_msg))
 							.setProgress(100, 0, true);
-			case PROGRESS_VALIDATING ->
+				break;
+			case PROGRESS_VALIDATING:
 					builder.setOngoing(true)
 							.setContentTitle(getString(R.string.dfu_status_validating))
 							.setContentText(getString(R.string.dfu_status_validating_msg))
 							.setProgress(100, 0, true);
-			case PROGRESS_DISCONNECTING ->
+				break;
+			case PROGRESS_DISCONNECTING:
 					builder.setOngoing(true)
 							.setContentTitle(getString(R.string.dfu_status_disconnecting))
 							.setContentText(getString(R.string.dfu_status_disconnecting_msg, deviceName))
 							.setProgress(100, 0, true);
-			case PROGRESS_COMPLETED ->
+				break;
+			case PROGRESS_COMPLETED:
 					builder.setOngoing(false)
 							.setContentTitle(getString(R.string.dfu_status_completed))
 							.setSmallIcon(android.R.drawable.stat_sys_upload_done)
 							.setContentText(getString(R.string.dfu_status_completed_msg))
 							.setAutoCancel(true)
 							.setColor(0xFF00B81A);
-			case PROGRESS_ABORTED ->
+				break;
+			case PROGRESS_ABORTED:
 					builder.setOngoing(false)
 							.setContentTitle(getString(R.string.dfu_status_aborted))
 							.setSmallIcon(android.R.drawable.stat_sys_upload_done)
 							.setContentText(getString(R.string.dfu_status_aborted_msg))
 							.setAutoCancel(true);
-			default -> {
+				break;
+			default: {
 				// progress is in percents
 				final String title = info.getTotalParts() == 1 ?
 						getString(R.string.dfu_status_uploading) :

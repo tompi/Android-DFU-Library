@@ -107,26 +107,27 @@ class SecureDfuImpl extends BaseCustomDfuImpl {
 
 				//noinspection SwitchStatementWithTooFewBranches
 				switch (requestType) {
-					case OP_CODE_CALCULATE_CHECKSUM_KEY -> {
-						final int offset = getInt(value, 3);
-						final int remoteCrc = getInt(value, 7);
-						final int localCrc = (int) (((ArchiveInputStream) mFirmwareStream).getCrc32() & 0xFFFFFFFFL);
-						// Check whether local and remote CRC match
-						if (localCrc == remoteCrc) {
-							// If so, update the number of bytes received
-							mProgressInfo.setBytesReceived(offset);
-						} else {
-							// Else, and only in case it was a PRN received, not the response for
-							// Calculate Checksum Request, stop sending data
-							if (mFirmwareUploadInProgress) {
-								mFirmwareUploadInProgress = false;
-								notifyLock();
-								return;
-							} // else will be handled by sendFirmware(gatt) below
+					case OP_CODE_CALCULATE_CHECKSUM_KEY: {
+							final int offset = getInt(value, 3);
+							final int remoteCrc = getInt(value, 7);
+							final int localCrc = (int) (((ArchiveInputStream) mFirmwareStream).getCrc32() & 0xFFFFFFFFL);
+							// Check whether local and remote CRC match
+							if (localCrc == remoteCrc) {
+								// If so, update the number of bytes received
+								mProgressInfo.setBytesReceived(offset);
+							} else {
+								// Else, and only in case it was a PRN received, not the response for
+								// Calculate Checksum Request, stop sending data
+								if (mFirmwareUploadInProgress) {
+									mFirmwareUploadInProgress = false;
+									notifyLock();
+									return;
+								} // else will be handled by sendFirmware(gatt) below
+							}
+							handlePacketReceiptNotification(gatt, characteristic, value);
 						}
-						handlePacketReceiptNotification(gatt, characteristic, value);
-					}
-					default -> {
+						break;
+					default: {
 						/*
 						 * If the DFU target device is in invalid state (e.g. the Init Packet is
 						 * required but has not been selected), the target will send
@@ -284,11 +285,11 @@ class SecureDfuImpl extends BaseCustomDfuImpl {
                     "Remote DFU error: %s", SecureDfuError.parse(error)));
 
 			// For the Extended Error more details can be obtained on some devices.
-			if (e instanceof final RemoteDfuExtendedErrorException ee) {
-				final int extendedError = DfuBaseService.ERROR_REMOTE_TYPE_SECURE_EXTENDED | ee.getExtendedErrorNumber();
+			if (e instanceof RemoteDfuExtendedErrorException) {
+				final int extendedError = DfuBaseService.ERROR_REMOTE_TYPE_SECURE_EXTENDED | ((RemoteDfuExtendedErrorException)e).getExtendedErrorNumber();
 				loge("Extended Error details: " + SecureDfuError.parseExtendedError(extendedError));
 				mService.sendLogBroadcast(DfuBaseService.LOG_LEVEL_ERROR,
-                        "Details: " + SecureDfuError.parseExtendedError(extendedError) + " (Code = " + ee.getExtendedErrorNumber() + ")");
+                        "Details: " + SecureDfuError.parseExtendedError(extendedError) + " (Code = " + ((RemoteDfuExtendedErrorException)e).getExtendedErrorNumber() + ")");
 				mService.terminateConnection(gatt, extendedError | DfuBaseService.ERROR_REMOTE_MASK);
 			} else {
 				mService.terminateConnection(gatt, error | DfuBaseService.ERROR_REMOTE_MASK);

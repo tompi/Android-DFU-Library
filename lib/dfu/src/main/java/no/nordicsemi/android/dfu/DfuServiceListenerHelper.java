@@ -165,7 +165,7 @@ public class DfuServiceListenerHelper {
 				return;
 
 			switch (action) {
-				case DfuBaseService.BROADCAST_PROGRESS -> {
+				case DfuBaseService.BROADCAST_PROGRESS: {
 					final int progress = intent.getIntExtra(DfuBaseService.EXTRA_DATA, 0);
 					final float speed = intent.getFloatExtra(DfuBaseService.EXTRA_SPEED_B_PER_MS, 0.0f);
 					final float avgSpeed = intent.getFloatExtra(DfuBaseService.EXTRA_AVG_SPEED_B_PER_MS, 0.0f);
@@ -173,61 +173,68 @@ public class DfuServiceListenerHelper {
 					final int partsTotal = intent.getIntExtra(DfuBaseService.EXTRA_PARTS_TOTAL, 0);
 
 					switch (progress) {
-						case DfuBaseService.PROGRESS_CONNECTING -> {
-							if (globalListener != null)
-								globalListener.onDeviceConnecting(address);
-							if (deviceListener != null)
-								deviceListener.onDeviceConnecting(address);
-						}
-						case DfuBaseService.PROGRESS_STARTING -> {
-							if (globalListener != null) {
-								globalListener.onDeviceConnected(address);
-								globalListener.onDfuProcessStarting(address);
+							case DfuBaseService.PROGRESS_CONNECTING: {
+								if (globalListener != null)
+									globalListener.onDeviceConnecting(address);
+								if (deviceListener != null)
+									deviceListener.onDeviceConnecting(address);
 							}
-							if (deviceListener != null) {
-								deviceListener.onDeviceConnected(address);
-								deviceListener.onDfuProcessStarting(address);
+							break;
+						case DfuBaseService.PROGRESS_STARTING: {
+								if (globalListener != null) {
+									globalListener.onDeviceConnected(address);
+									globalListener.onDfuProcessStarting(address);
+								}
+								if (deviceListener != null) {
+									deviceListener.onDeviceConnected(address);
+									deviceListener.onDfuProcessStarting(address);
+								}
 							}
-						}
-						case DfuBaseService.PROGRESS_ENABLING_DFU_MODE -> {
-							if (globalListener != null)
-								globalListener.onEnablingDfuMode(address);
-							if (deviceListener != null)
-								deviceListener.onEnablingDfuMode(address);
-						}
-						case DfuBaseService.PROGRESS_VALIDATING -> {
-							if (globalListener != null)
-								globalListener.onFirmwareValidating(address);
-							if (deviceListener != null)
-								deviceListener.onFirmwareValidating(address);
-						}
-						case DfuBaseService.PROGRESS_DISCONNECTING -> {
-							if (globalListener != null)
-								globalListener.onDeviceDisconnecting(address);
-							if (deviceListener != null)
-								deviceListener.onDeviceDisconnecting(address);
-						}
-						case DfuBaseService.PROGRESS_COMPLETED -> {
-							if (globalListener != null) {
-								globalListener.onDeviceDisconnected(address);
-								globalListener.onDfuCompleted(address);
+							break;
+						case DfuBaseService.PROGRESS_ENABLING_DFU_MODE: {
+								if (globalListener != null)
+									globalListener.onEnablingDfuMode(address);
+								if (deviceListener != null)
+									deviceListener.onEnablingDfuMode(address);
 							}
-							if (deviceListener != null) {
-								deviceListener.onDeviceDisconnected(address);
-								deviceListener.onDfuCompleted(address);
+							break;
+						case DfuBaseService.PROGRESS_VALIDATING: {
+								if (globalListener != null)
+									globalListener.onFirmwareValidating(address);
+								if (deviceListener != null)
+									deviceListener.onFirmwareValidating(address);
 							}
-						}
-						case DfuBaseService.PROGRESS_ABORTED -> {
-							if (globalListener != null) {
-								globalListener.onDeviceDisconnected(address);
-								globalListener.onDfuAborted(address);
+							break;
+						case DfuBaseService.PROGRESS_DISCONNECTING: {
+								if (globalListener != null)
+									globalListener.onDeviceDisconnecting(address);
+								if (deviceListener != null)
+									deviceListener.onDeviceDisconnecting(address);
 							}
-							if (deviceListener != null) {
-								deviceListener.onDeviceDisconnected(address);
-								deviceListener.onDfuAborted(address);
+							break;
+						case DfuBaseService.PROGRESS_COMPLETED: {
+								if (globalListener != null) {
+									globalListener.onDeviceDisconnected(address);
+									globalListener.onDfuCompleted(address);
+								}
+								if (deviceListener != null) {
+									deviceListener.onDeviceDisconnected(address);
+									deviceListener.onDfuCompleted(address);
+								}
 							}
-						}
-						default -> {
+							break;
+						case DfuBaseService.PROGRESS_ABORTED: {
+								if (globalListener != null) {
+									globalListener.onDeviceDisconnected(address);
+									globalListener.onDfuAborted(address);
+								}
+								if (deviceListener != null) {
+									deviceListener.onDeviceDisconnected(address);
+									deviceListener.onDfuAborted(address);
+								}
+							}
+							break;
+						default: {
 							if (progress == 0) {
 								if (globalListener != null)
 									globalListener.onDfuProcessStarted(address);
@@ -242,7 +249,7 @@ public class DfuServiceListenerHelper {
 					}
 
 				}
-				case DfuBaseService.BROADCAST_ERROR -> {
+				case DfuBaseService.BROADCAST_ERROR: {
 					final int error = intent.getIntExtra(DfuBaseService.EXTRA_DATA, 0);
 					final int errorType = intent.getIntExtra(DfuBaseService.EXTRA_ERROR_TYPE, 0);
 
@@ -251,19 +258,21 @@ public class DfuServiceListenerHelper {
 					if (deviceListener != null)
 						deviceListener.onDeviceDisconnected(address);
 					switch (errorType) {
-						case DfuBaseService.ERROR_TYPE_COMMUNICATION_STATE -> {
-							if (globalListener != null)
-								globalListener.onError(address, error, errorType, GattError.parseConnectionError(error));
-							if (deviceListener != null)
-								deviceListener.onError(address, error, errorType, GattError.parseConnectionError(error));
-						}
-						case DfuBaseService.ERROR_TYPE_DFU_REMOTE -> {
-							if (globalListener != null)
-								globalListener.onError(address, error, errorType, GattError.parseDfuRemoteError(error));
-							if (deviceListener != null)
-								deviceListener.onError(address, error, errorType, GattError.parseDfuRemoteError(error));
-						}
-						default -> {
+						case DfuBaseService.ERROR_TYPE_COMMUNICATION_STATE: {
+								if (globalListener != null)
+									globalListener.onError(address, error, errorType, GattError.parseConnectionError(error));
+								if (deviceListener != null)
+									deviceListener.onError(address, error, errorType, GattError.parseConnectionError(error));
+							}
+							break;
+						case DfuBaseService.ERROR_TYPE_DFU_REMOTE: {
+								if (globalListener != null)
+									globalListener.onError(address, error, errorType, GattError.parseDfuRemoteError(error));
+								if (deviceListener != null)
+									deviceListener.onError(address, error, errorType, GattError.parseDfuRemoteError(error));
+							}
+							break;
+						default: {
 							if (globalListener != null)
 								globalListener.onError(address, error, errorType, GattError.parse(error));
 							if (deviceListener != null)

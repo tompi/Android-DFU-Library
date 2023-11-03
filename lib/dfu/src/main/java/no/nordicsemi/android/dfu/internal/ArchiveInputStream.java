@@ -371,10 +371,7 @@ public class ArchiveInputStream extends InputStream {
 			final ManifestFile manifestFile = new Gson().fromJson(manifestData, ManifestFile.class);
 			manifest = manifestFile.getManifest();
 			if (manifest == null) {
-				Log.w(TAG, """
-						Manifest failed to be parsed. Did you add\s
-						-keep class no.nordicsemi.android.dfu.** { *; }
-						to your proguard rules?""");
+				Log.w(TAG, "Manifest failed to be parsed. Did you add -keep class no.nordicsemi.android.dfu.** { *; } to your proguard rules?");
 			}
 		} else {
 			Log.w(TAG, "Manifest not found in the ZIP. It is recommended to use a distribution " +

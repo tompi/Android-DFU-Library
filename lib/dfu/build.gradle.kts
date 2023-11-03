@@ -33,11 +33,11 @@ plugins {
     // https://github.com/NordicSemiconductor/Android-Gradle-Plugins/blob/main/plugins/src/main/kotlin/AndroidLibraryConventionPlugin.kt
     alias(libs.plugins.nordic.library)
     // https://github.com/NordicSemiconductor/Android-Gradle-Plugins/blob/main/plugins/src/main/kotlin/AndroidNexusRepositoryPlugin.kt
-    alias(libs.plugins.nordic.nexus)
+    // alias(libs.plugins.nordic.nexus)
 }
-
 group = "no.nordicsemi.android"
 
+/*
 nordicNexusPublishing {
     POM_ARTIFACT_ID = "dfu"
     POM_NAME = "DFU Library for Android"
@@ -53,6 +53,8 @@ nordicNexusPublishing {
     POM_DEVELOPER_EMAIL = "aleksander.nowakowski@nordicsemi.no"
 }
 
+ */
+
 android {
     namespace = "no.nordicsemi.android.dfu"
 
@@ -61,8 +63,8 @@ android {
     }
 
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_17
-        targetCompatibility = JavaVersion.VERSION_17
+        sourceCompatibility = JavaVersion.VERSION_11
+        targetCompatibility = JavaVersion.VERSION_11
     }
 }
 
